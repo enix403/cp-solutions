@@ -128,11 +128,11 @@ using v = vector<T>;
 class Solution
 {
 public:
-  int numIslands(vector<vector<char>>& grid)
+  int maxAreaOfIsland(vector<vector<int>>& grid)
   {
-    int m = grid.size();
-    int n = grid[0].size();
-    v<v<bool>> vis(m, v<bool>(n, false));
+    int R = grid.size();
+    int C = grid[0].size();
+    v<v<bool>> vis(R, v<bool>(C, false));
 
     const v<pii> dirs = {
         { 1,  0},
@@ -142,10 +142,12 @@ public:
     };
 
     int res = 0;
-    for (int r = 0; r < m; ++r) {
-      for (int c = 0; c < n; ++c) {
-        if (vis[r][c] || grid[r][c] == '0')
+    for (int r = 0; r < R; ++r) {
+      for (int c = 0; c < C; ++c) {
+        if (vis[r][c] || grid[r][c] == 0)
           continue;
+
+        int area = 0;
 
         stack<pii> s;
         s.push({r, c});
@@ -153,23 +155,29 @@ public:
           auto [r, c] = s.top();
           s.pop();
 
+          if (vis[r][c])
+            continue;
+
           vis[r][c] = true;
+          // cout << pii{r,c} << endl;
+          area++;
 
           for (const auto [dr, dc] : dirs) {
             int x = r + dr;
             int y = c + dc;
 
-            if (x < 0 || x >= m || y < 0 || y >= n)
+            if (x < 0 || x >= R || y < 0 || y >= C)
               continue;
 
-            if (vis[x][y] || grid[x][y] == '0')
+            if (vis[x][y] || grid[x][y] == 0)
               continue;
 
             s.push({x, y});
           }
         }
 
-        res++;
+        // cout << r << "," << c << "=" << area << endl;
+        res = max(res, area);
       }
     }
 
@@ -182,21 +190,14 @@ int main()
   ios::sync_with_stdio(false);
   cin.tie(NULL);
 
-  vi arr = {1, 0, 0, 1};
-  // v<v<char>> grid = {
-  //   {'1','1','1','1','0'},
-  //   {'1','1','0','1','0'},
-  //   {'1','1','0','0','0'},
-  //   {'0','0','0','0','0'}
-  // };
-  v<v<char>> grid = {
-    {'1','1','0','0','0'},
-    {'1','1','0','0','0'},
-    {'0','0','1','0','0'},
-    {'0','0','0','1','1'}
+  v<v<int>> grid = {
+    {1,1,0,0,0},
+    {1,1,0,0,0},
+    {0,0,0,1,1},
+    {0,0,0,1,1}
   };
 
-  cout << Solution().numIslands(grid) << endl;
+  cout << Solution().maxAreaOfIsland(grid) << endl;
 
   return 0;
 }
