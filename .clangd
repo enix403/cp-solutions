@@ -1,5 +1,7 @@
 CompileFlags:
-  Add: [-std=c++17]
+  Add:
+    - -std=c++17
+    - -DCUSTOM_DEBUG=1
 
 Diagnostics:
   UnusedIncludes: None
